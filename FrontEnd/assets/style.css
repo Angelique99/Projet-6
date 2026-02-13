@@ -141,7 +141,7 @@ li:hover {
 	margin: 5px;
 	border: #1D6154 solid 2px;
 }
-#filtres button:active {
+#filtres button.active {
 	background-color: #1D6154;
 	color: white;
 }

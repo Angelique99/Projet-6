@@ -1,5 +1,10 @@
 // récupération des travaux + affichage dynamique de la galerie //
-window.addEventListener("DOMContentLoaded", getworks);
+let worksData = [];
+
+window.addEventListener("DOMContentLoaded", async () => {
+    await getworks();
+    initFilters();
+});
 
 async function getworks() {
     const url = "http://localhost:5678/api/works";
@@ -8,55 +13,57 @@ async function getworks() {
         const response = await fetch(url);
         if (!response.ok) throw new Error("Status: " + response.status);
 
-        const data = await response.json();
-        data.forEach(work => dossierFigures(work));
+        worksData = await response.json();
+        displayWorks(worksData);
 
     } catch (error) {
         console.error("Erreur lors du chargement des figures :", error);
     }
 }
 
-function dossierFigures(data) {
+function displayWorks(works) {
     const gallery = document.querySelector(".gallery");
-    if (!gallery) return console.error(".gallery introuvable");
+    if (!gallery) return;
 
-    const figure = document.createElement("figure");
+    gallery.innerHTML = "";
 
-    figure.dataset.category = data.category.name.toLowerCase();
+    works.forEach(work => {
+        const figure = document.createElement("figure");
 
-    figure.innerHTML = `
-        <img src="${data.imageUrl}" alt="${data.title}">
-        <figcaption>${data.title}</figcaption>
-    `;
-    gallery.appendChild(figure);
+        figure.innerHTML = `
+            <img src="${work.imageUrl}" alt="${work.title}">
+            <figcaption>${work.title}</figcaption>
+        `;
+
+        gallery.appendChild(figure);
+    });
 }
 
 // Filtres //
-const buttons = document.querySelectorAll("#filtres button");
+function initFilters() {
+    const buttons = document.querySelectorAll("#filtres button");
 
-buttons.forEach(button => {
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            // retire classe active boutons
+            buttons.forEach(btn => btn.classList.remove("active"));
+            // ajoute classe active bouton cliqué
+            button.classList.add("active");
 
-    button.addEventListener("click", function () {
+            const categoryId = button.dataset.categoryId;
 
-        const category = button.dataset.category;
-        const figures = document.querySelectorAll(".gallery figure");
-
-        figures.forEach(figure => {
-
-            if (category === "tous") {
-                figure.style.display = "block";
-            } 
-            else if (figure.dataset.category === category) {
-                figure.style.display = "block";
-            } 
-            else {
-                figure.style.display = "none";
+            if (categoryId === "tous") {
+                displayWorks(worksData);
+                return;
             }
 
+            const filteredWorks = worksData.filter(work =>
+                work.categoryId == categoryId
+            );
+
+            displayWorks(filteredWorks);
         });
-
     });
-
-});
+}
 
 // Page de connexion //
