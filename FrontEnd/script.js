@@ -39,7 +39,7 @@ function displayWorks(works) {
     });
 }
 
-// Filtres //
+// Filtres & boutons //
 function initFilters() {
     const buttons = document.querySelectorAll("#filtres button");
 

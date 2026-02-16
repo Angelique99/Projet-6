@@ -28,6 +28,13 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+a {
+	text-decoration: none;
+	color: black;
+}
+a:visited {
+	color: black;
+}
 body {
 	line-height: 1;
 }
@@ -124,6 +131,27 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+}
+
+.login {
+	width: 50%;
+	margin: auto;
+	text-align: center;
+}
+.login form {
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+	margin-top: 30px;
+}
+.login input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+.login h2 {
+	margin-bottom: 20px;
 }
 
 #filtres {
