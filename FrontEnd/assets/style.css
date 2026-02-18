@@ -153,6 +153,13 @@ li:hover {
 .login h2 {
 	margin-bottom: 20px;
 }
+.error-message {
+	color: red;
+	font-weight: bold;
+	font-size: 16px;
+	margin-top: 15px;
+	padding: 10px;
+}
 
 #filtres {
 	text-align: center;
