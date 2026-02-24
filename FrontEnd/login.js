@@ -17,7 +17,7 @@ form.addEventListener("submit", async (event) => {
                 password: password,
             }),
         });
-
+        
         if (response.status === 401) {
             throw new Error("Identifiants ou Mot de passe incorrects");
         }

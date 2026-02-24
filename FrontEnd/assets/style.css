@@ -62,7 +62,7 @@ body {
 	padding: 50px;
 }
 .edition {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	text-align: center;
 	justify-content: center;
@@ -73,6 +73,7 @@ body {
 	top: 0;
 	left: 0;
 	width: 100%;
+	z-index: 1000;
 }
 .edition i {
 	font-size: 18px;
@@ -182,6 +183,26 @@ li:hover {
 	padding: 10px;
 }
 
+.portfolio-header {
+    display: flex;
+    align-items: center;
+	justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+.btn-modifier {
+	display: none;
+    background: white;
+    color: black;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.edit-button i {
+    margin-right: 5px;
+}
+
 #filtres {
 	text-align: center;
 	margin: 30px 0;
@@ -212,8 +233,8 @@ li:hover {
 
 .gallery img {
 	width: 100%;
-
 }
+
 #contact {
 	width: 50%;
 margin: auto;

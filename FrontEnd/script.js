@@ -1,6 +1,6 @@
 let worksData = []; // Stockage global des travaux pour les filtres
 
-window.addEventListener("DOMContentLoaded", async () => {  // Attend que le DOM soit chargé
+window.addEventListener("DOMContentLoaded", async () => { 
     await getworks(); 
     initFilters();
 });
@@ -62,4 +62,53 @@ function initFilters() {
             displayWorks(filteredWorks);  // Affiche les travaux filtrés
         });
     });
+}
+// Mode Edition //
+const token = localStorage.getItem("token");
+
+// éléments HTML
+const banner = document.querySelector(".edition");
+const loginBtn = document.querySelector('a[href="login.html"]');
+const filters = document.getElementById("filtres");
+const portfolioTitle = document.querySelector("#portfolio h2");
+
+// SI UTILISATEUR CONNECTÉ
+if (token) {
+
+    // Affiche la bannière
+    if (banner) {
+        banner.style.display = "flex";
+    }
+
+    // Changement login en logout
+    if (loginBtn) {
+        loginBtn.textContent = "logout";
+
+        // logout
+        loginBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            localStorage.removeItem("token");
+
+            window.location.reload();
+        });
+    }
+
+    // Masque les filtres
+    if (filters) {
+        filters.style.display = "none";
+    }
+
+window.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    const editBtn = document.querySelector(".btn-modifier");
+
+    if (token) {
+        editBtn.style.display = "inline-block";
+        editBtn.addEventListener("click", () => {
+            alert("Modale");
+        });
+    }
+});
+
 }
