@@ -318,3 +318,15 @@ footer nav ul {
     width: 100%;
 }
 
+#open-add-photo,
+#add-photo-form button {
+	background: #1D6154;
+	color: white;
+	border: none;
+	border-radius: 25px;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-family: 'Syne';
+	font-size: 16px;
+}
+
