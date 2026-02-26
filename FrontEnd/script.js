@@ -72,7 +72,7 @@ const loginBtn = document.querySelector('a[href="login.html"]');
 const filters = document.getElementById("filtres");
 const portfolioTitle = document.querySelector("#portfolio h2");
 
-// SI UTILISATEUR CONNECTÉ
+// Si connecté
 if (token) {
 
     // Affiche la bannière
@@ -105,10 +105,47 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (token) {
         editBtn.style.display = "inline-block";
-        editBtn.addEventListener("click", () => {
-            alert("Modale");
-        });
     }
 });
 
 }
+
+// Modale admin //
+const adminModal = document.getElementById("admin-modal");
+const adminClose = document.querySelector(".admin-close");
+const adminGallery = document.querySelector(".admin-gallery");
+const editBtn = document.querySelector(".btn-modifier");
+
+// Ouverture
+if (editBtn) {
+    editBtn.addEventListener("click", () => {
+
+        adminModal.style.display = "flex";
+
+        // Affiche les travaux dans la modale
+        adminGallery.innerHTML = "";
+
+        worksData.forEach(work => {
+            const img = document.createElement("img");
+            img.src = work.imageUrl;
+            adminGallery.appendChild(img);
+        });
+    });
+}
+
+// Fermeture
+adminClose.addEventListener("click", () => {
+    adminModal.style.display = "none";
+});
+
+adminModal.addEventListener("click", (event) => {
+    if (event.target === adminModal) {
+        adminModal.style.display = "none";
+    }
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        adminModal.style.display = "none";
+    }
+});

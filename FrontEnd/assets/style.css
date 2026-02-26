@@ -284,3 +284,37 @@ footer nav ul {
 	margin: 2em
 }
 
+.admin-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.admin-modal-content {
+    background: white;
+    width: 500px;
+    border-radius: 10px;
+    padding: 40px;
+    position: relative;
+    text-align: center;
+	font-size: 20px;
+}
+.admin-close {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+.admin-gallery {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+.admin-gallery img {
+    width: 100%;
+}
+
