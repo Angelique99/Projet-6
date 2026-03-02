@@ -74,15 +74,43 @@
 	</nav>
 </footer>
 <div class="admin-modal" id="admin-modal">
-    <div class="admin-modal-content">
+    <div class="admin-modal-content" id="gallery-view">
 
         <span class="admin-close">&times;</span>
         <h3>Galerie photo</h3>
 
-        <div class="admin-gallery"></div>
+        <div class="admin-gallery">
+	
+        <div class="admin-item">
+            <img src="https://via.placeholder.com/100x100?text=1">
+            <span class="delete-icon"><i class="fa-solid fa-trash-can"></i></span>
+        </div>
+        <div class="admin-item">
+            <img src="https://via.placeholder.com/100x100?text=2">
+            <span class="delete-icon"><i class="fa-solid fa-trash-can"></i></span>
+        </div>
+        </div>
 		<hr>
         <button id="open-add-photo">Ajouter une photo</button>
+</div>
+
+<div class="modal-view hidden" id="add-photo-view">
+    <span class="back-arrow">←</span>
+    <h3>Ajout photo</h3>
+    <form id="add-photo-form">
+        <input type="file" id="photo-input" accept="image/*">
+        <input type="text" id="title-input" placeholder="Titre">
+        <select id="category-input">
+            <option value="">Choisir une catégorie</option>
+            <option value="1">Objets</option>
+            <option value="2">Appartements</option>
+            <option value="3">Hotels & Restaurants</option>
+        </select>
+            <button type="submit">Valider</button>
+        </form>
     </div>
+
+</div>
 </div>
 <script src="script.js"></script>
 </body>

@@ -299,6 +299,7 @@ footer nav ul {
     padding: 40px;
     position: relative;
     text-align: center;
+	font-weight: bold;
 	font-size: 20px;
 }
 .admin-close {
@@ -308,16 +309,57 @@ footer nav ul {
     font-size: 28px;
     cursor: pointer;
 }
+.hidden {
+    display: none;
+}
 .admin-gallery {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     margin-top: 20px;
 }
+.admin-item {
+    position: relative;
+}
 .admin-gallery img {
     width: 100%;
 }
+.delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: black;
+    color: white;
+    border-radius: 3px;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.back-arrow {
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#add-photo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#add-photo-form input,
+#add-photo-form select {
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
 #open-add-photo,
 #add-photo-form button {
 	background: #1D6154;
@@ -328,5 +370,10 @@ footer nav ul {
 	cursor: pointer;
 	font-family: 'Syne';
 	font-size: 16px;
+}
+.admin-modal-content hr {
+    margin: 25px 0;
+    border: none;
+    border-top: 1px solid #ddd;
 }
 

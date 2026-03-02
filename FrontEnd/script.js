@@ -73,6 +73,7 @@ const filters = document.getElementById("filtres");
 const portfolioTitle = document.querySelector("#portfolio h2");
 
 // Si connecté
+function connected() {
 if (token) {
 
     // Affiche la bannière
@@ -107,8 +108,10 @@ window.addEventListener("DOMContentLoaded", () => {
         editBtn.style.display = "inline-block";
     }
 });
-
 }
+}
+connected();
+
 
 // Modale admin //
 const adminModal = document.getElementById("admin-modal");
@@ -116,20 +119,34 @@ const adminClose = document.querySelector(".admin-close");
 const adminGallery = document.querySelector(".admin-gallery");
 const editBtn = document.querySelector(".btn-modifier");
 
+const galleryView = document.getElementById("gallery-view");
+const addPhotoView = document.getElementById("add-photo-view");
+
+const openAddPhotoBtn = document.getElementById("open-add-photo");
+const backArrow = document.querySelector(".back-arrow");
+
 // Ouverture
 if (editBtn) {
     editBtn.addEventListener("click", () => {
 
         adminModal.style.display = "flex";
-
+        showGalleryView();
         // Affiche les travaux dans la modale
         adminGallery.innerHTML = "";
 
         worksData.forEach(work => {
-            const img = document.createElement("img");
-            img.src = work.imageUrl;
-            adminGallery.appendChild(img);
-        });
+          const adminItem = document.createElement("div");
+          adminItem.classList.add("admin-item");
+
+        adminItem.innerHTML = `
+          <img src="${work.imageUrl}" alt="${work.title}">
+          <span class="delete-icon">
+              <i class="fa-solid fa-trash-can"></i>
+          </span>
+           `;
+
+         adminGallery.appendChild(adminItem);
+   });
     });
 }
 
@@ -148,4 +165,30 @@ document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
         adminModal.style.display = "none";
     }
+});
+
+//Changement de vue
+function showGalleryView() {
+    galleryView.classList.remove("hidden");
+    addPhotoView.classList.add("hidden");
+}
+
+function showAddPhotoView() {
+    galleryView.classList.add("hidden");
+    addPhotoView.classList.remove("hidden");
+}
+
+openAddPhotoBtn.addEventListener("click", showAddPhotoView);
+backArrow.addEventListener("click", showGalleryView);
+
+//Ajout et suppression
+const dummyDeleteButtons = document.querySelectorAll(".delete-icon");
+dummyDeleteButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+    });
+});
+
+const dummyAddForm = document.getElementById("add-photo-form");
+dummyAddForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
 });
