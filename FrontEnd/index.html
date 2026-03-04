@@ -74,22 +74,13 @@
 	</nav>
 </footer>
 <div class="admin-modal" id="admin-modal">
-    <div class="admin-modal-content" id="gallery-view">
+    <div class="admin-modal-content">
 
         <span class="admin-close">&times;</span>
-        <h3>Galerie photo</h3>
 
-        <div class="admin-gallery">
-	
-        <div class="admin-item">
-            <img src="https://via.placeholder.com/100x100?text=1">
-            <span class="delete-icon"><i class="fa-solid fa-trash-can"></i></span>
-        </div>
-        <div class="admin-item">
-            <img src="https://via.placeholder.com/100x100?text=2">
-            <span class="delete-icon"><i class="fa-solid fa-trash-can"></i></span>
-        </div>
-        </div>
+	 <div class="modal-view" id="gallery-view">
+        <h3>Galerie photo</h3>
+        <div class="admin-gallery"></div>
 		<hr>
         <button id="open-add-photo">Ajouter une photo</button>
 </div>
@@ -98,18 +89,22 @@
     <span class="back-arrow">←</span>
     <h3>Ajout photo</h3>
     <form id="add-photo-form">
-        <input type="file" id="photo-input" accept="image/*">
+        <div class="upload-container">
+            <label for="photo-input" class="upload-label">
+				<img id="preview-img" class="hidden" alt="Prévisualisation">
+                <i class="fa-regular fa-image icon-placeholder"></i>
+                <span class="text-placeholder">+ Ajouter photo</span>
+                <p class="info-text">jpg, png : 4mo max</p>
+			    <input type="file" id="photo-input" accept="image/*" hidden>
+		    </label>
+        </div>
         <input type="text" id="title-input" placeholder="Titre">
         <select id="category-input">
-            <option value="">Choisir une catégorie</option>
-            <option value="1">Objets</option>
-            <option value="2">Appartements</option>
-            <option value="3">Hotels & Restaurants</option>
+            <option value="">Catégorie</option>
         </select>
             <button type="submit">Valider</button>
         </form>
     </div>
-
 </div>
 </div>
 <script src="script.js"></script>

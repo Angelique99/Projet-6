@@ -2,6 +2,7 @@ let worksData = []; // Stockage global des travaux pour les filtres
 
 window.addEventListener("DOMContentLoaded", async () => { 
     await getworks(); 
+    await getCategories();
     initFilters();
 });
 
@@ -17,6 +18,29 @@ async function getworks() {
 
     } catch (error) {
         console.error("Erreur lors du chargement des figures :", error);
+    }
+}
+async function getCategories() {
+    const url = "http://localhost:5678/api/categories";
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Erreur catégories");
+
+        const categories = await response.json();
+        const select = document.getElementById("category-input");
+
+        select.innerHTML = '<option value="">Catégorie</option>';
+
+        categories.forEach(category => {
+            const option = document.createElement("option");
+            option.value = category.id;
+            option.textContent = category.name;
+            select.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Erreur chargement catégories :", error);
     }
 }
 
@@ -124,6 +148,9 @@ const addPhotoView = document.getElementById("add-photo-view");
 
 const openAddPhotoBtn = document.getElementById("open-add-photo");
 const backArrow = document.querySelector(".back-arrow");
+const form = document.getElementById("add-photo-form");
+const photoInput = document.getElementById("photo-input");
+const previewImg = document.getElementById("preview-img");
 
 // Ouverture
 if (editBtn) {
@@ -131,22 +158,7 @@ if (editBtn) {
 
         adminModal.style.display = "flex";
         showGalleryView();
-        // Affiche les travaux dans la modale
-        adminGallery.innerHTML = "";
-
-        worksData.forEach(work => {
-          const adminItem = document.createElement("div");
-          adminItem.classList.add("admin-item");
-
-        adminItem.innerHTML = `
-          <img src="${work.imageUrl}" alt="${work.title}">
-          <span class="delete-icon">
-              <i class="fa-solid fa-trash-can"></i>
-          </span>
-           `;
-
-         adminGallery.appendChild(adminItem);
-   });
+        renderAdminGallery();
     });
 }
 
@@ -176,19 +188,105 @@ function showGalleryView() {
 function showAddPhotoView() {
     galleryView.classList.add("hidden");
     addPhotoView.classList.remove("hidden");
+
+    previewImg.src = "";
+    previewImg.classList.add("hidden");
+    photoInput.value = "";
 }
 
 openAddPhotoBtn.addEventListener("click", showAddPhotoView);
 backArrow.addEventListener("click", showGalleryView);
 
-//Ajout et suppression
-const dummyDeleteButtons = document.querySelectorAll(".delete-icon");
-dummyDeleteButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
+// Rendu galerie
+function renderAdminGallery() {
+    adminGallery.innerHTML = "";
+    worksData.forEach(work => {
+        const item = document.createElement("div");
+        item.classList.add("admin-item");
+        item.innerHTML = `
+            <img src="${work.imageUrl}">
+            <span class="delete-icon" data-id="${work.id}">
+                <i class="fa-solid fa-trash-can"></i>
+            </span>
+        `;
+        adminGallery.appendChild(item);
     });
+}
+
+// Suppression
+adminGallery.addEventListener("click", async (event) => {
+    const deleteBtn = event.target.closest(".delete-icon");
+    if (!deleteBtn) return;
+    const workId = deleteBtn.dataset.id;
+
+    try {
+       const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+    if (!response.ok) {
+    throw new Error("Erreur API lors de la suppression de la photo");
+}
+        worksData = worksData.filter(work => work.id != workId);
+        renderAdminGallery();
+        displayWorks(worksData);
+    } catch (error) {
+        console.error("Erreur suppression :", error);
+    }
 });
 
-const dummyAddForm = document.getElementById("add-photo-form");
-dummyAddForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
+// Ajout
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const image = document.getElementById("photo-input").files[0];
+    const title = document.getElementById("title-input").value;
+    const category = parseInt(document.getElementById("category-input").value);
+
+    if (!image || !title || !category) {
+        alert("Formulaire incomplet");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("category", category);
+
+    try {
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData
+        });
+        
+    console.log("STATUS POST :", response.status);
+
+    if (!response.ok) {
+    throw new Error("Erreur API lors de l'ajout de la photo");
+}
+        const newWork = await response.json();
+        await getworks();
+        renderAdminGallery();
+        showGalleryView();
+
+        form.reset();
+
+    } catch (error) {
+        console.error("Erreur upload :", error);
+    }
+});
+
+// Prévisualisation image
+const uploadLabel = document.querySelector(".upload-label");
+
+photoInput.addEventListener("change", () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+  previewImg.src = e.target.result;
+  previewImg.classList.remove("hidden");
+  };
+  reader.readAsDataURL(file);
 });
