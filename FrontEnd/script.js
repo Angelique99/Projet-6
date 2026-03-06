@@ -1,16 +1,18 @@
-let worksData = []; // Stockage global des travaux pour les filtres
+let worksData = []; // Stockage global des travaux
+const token = localStorage.getItem("token");
 
+// Initialisation
 window.addEventListener("DOMContentLoaded", async () => { 
     await getworks(); 
     await getCategories();
     initFilters();
+    connected();
 });
 
+// API 
 async function getworks() {
-    const url = "http://localhost:5678/api/works";
-
     try {
-        const response = await fetch(url);
+        const response = await fetch("http://localhost:5678/api/works");
         if (!response.ok) throw new Error("Status: " + response.status);
 
         worksData = await response.json();
@@ -21,10 +23,8 @@ async function getworks() {
     }
 }
 async function getCategories() {
-    const url = "http://localhost:5678/api/categories";
-
     try {
-        const response = await fetch(url);
+        const response = await fetch("http://localhost:5678/api/categories");
         if (!response.ok) throw new Error("Erreur catégories");
 
         const categories = await response.json();
@@ -44,6 +44,7 @@ async function getCategories() {
     }
 }
 
+// Affichage 
 function displayWorks(works) {  // Affiche dynamiquement les photos
     const gallery = document.querySelector(".gallery");
     if (!gallery) return;
@@ -62,6 +63,7 @@ function displayWorks(works) {  // Affiche dynamiquement les photos
     });
 }
 
+// Filtres
 function initFilters() {
     const buttons = document.querySelectorAll("#filtres button");
 
@@ -88,13 +90,12 @@ function initFilters() {
     });
 }
 // Mode Edition //
-const token = localStorage.getItem("token");
 
 // éléments HTML
 const banner = document.querySelector(".edition");
 const loginBtn = document.querySelector('a[href="login.html"]');
 const filters = document.getElementById("filtres");
-const portfolioTitle = document.querySelector("#portfolio h2");
+const editBtn = document.querySelector(".btn-modifier");
 
 // Si connecté
 function connected() {
@@ -105,6 +106,10 @@ if (token) {
         banner.style.display = "flex";
     }
 
+    if (editBtn) {
+        editBtn.style.display = "inline-block";
+    }
+
     // Changement login en logout
     if (loginBtn) {
         loginBtn.textContent = "logout";
@@ -112,9 +117,7 @@ if (token) {
         // logout
         loginBtn.addEventListener("click", (event) => {
             event.preventDefault();
-
             localStorage.removeItem("token");
-
             window.location.reload();
         });
     }
@@ -124,30 +127,20 @@ if (token) {
         filters.style.display = "none";
     }
 
-window.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
-    const editBtn = document.querySelector(".btn-modifier");
-
-    if (token) {
-        editBtn.style.display = "inline-block";
-    }
-});
+};
 }
-}
-connected();
-
 
 // Modale admin //
 const adminModal = document.getElementById("admin-modal");
 const adminClose = document.querySelector(".admin-close");
 const adminGallery = document.querySelector(".admin-gallery");
-const editBtn = document.querySelector(".btn-modifier");
 
 const galleryView = document.getElementById("gallery-view");
 const addPhotoView = document.getElementById("add-photo-view");
 
 const openAddPhotoBtn = document.getElementById("open-add-photo");
 const backArrow = document.querySelector(".back-arrow");
+
 const form = document.getElementById("add-photo-form");
 const photoInput = document.getElementById("photo-input");
 const previewImg = document.getElementById("preview-img");
@@ -155,7 +148,6 @@ const previewImg = document.getElementById("preview-img");
 // Ouverture
 if (editBtn) {
     editBtn.addEventListener("click", () => {
-
         adminModal.style.display = "flex";
         showGalleryView();
         renderAdminGallery();
@@ -197,11 +189,13 @@ function showAddPhotoView() {
 openAddPhotoBtn.addEventListener("click", showAddPhotoView);
 backArrow.addEventListener("click", showGalleryView);
 
-// Rendu galerie
+// Galerie admin
 function renderAdminGallery() {
     adminGallery.innerHTML = "";
+
     worksData.forEach(work => {
         const item = document.createElement("div");
+
         item.classList.add("admin-item");
         item.innerHTML = `
             <img src="${work.imageUrl}">
@@ -215,8 +209,10 @@ function renderAdminGallery() {
 
 // Suppression
 adminGallery.addEventListener("click", async (event) => {
+
     const deleteBtn = event.target.closest(".delete-icon");
     if (!deleteBtn) return;
+
     const workId = deleteBtn.dataset.id;
 
     try {
@@ -229,8 +225,10 @@ adminGallery.addEventListener("click", async (event) => {
     throw new Error("Erreur API lors de la suppression de la photo");
 }
         worksData = worksData.filter(work => work.id != workId);
+
         renderAdminGallery();
         displayWorks(worksData);
+
     } catch (error) {
         console.error("Erreur suppression :", error);
     }
@@ -238,8 +236,10 @@ adminGallery.addEventListener("click", async (event) => {
 
 // Ajout
 form.addEventListener("submit", async (event) => {
+
     event.preventDefault();
-    const image = document.getElementById("photo-input").files[0];
+
+    const image = photoInput.files[0];
     const title = document.getElementById("title-input").value;
     const category = parseInt(document.getElementById("category-input").value);
 
@@ -249,6 +249,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     const formData = new FormData();
+
     formData.append("image", image);
     formData.append("title", title);
     formData.append("category", category);
@@ -259,17 +260,13 @@ form.addEventListener("submit", async (event) => {
             headers: { Authorization: `Bearer ${token}` },
             body: formData
         });
-        
-    console.log("STATUS POST :", response.status);
 
     if (!response.ok) {
     throw new Error("Erreur API lors de l'ajout de la photo");
 }
-        const newWork = await response.json();
         await getworks();
         renderAdminGallery();
         showGalleryView();
-
         form.reset();
 
     } catch (error) {
@@ -278,15 +275,18 @@ form.addEventListener("submit", async (event) => {
 });
 
 // Prévisualisation image
-const uploadLabel = document.querySelector(".upload-label");
 
 photoInput.addEventListener("change", () => {
+
   const file = photoInput.files[0];
   if (!file) return;
+
   const reader = new FileReader();
+
   reader.onload = (e) => {
   previewImg.src = e.target.result;
   previewImg.classList.remove("hidden");
   };
+
   reader.readAsDataURL(file);
 });
